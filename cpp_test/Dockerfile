@@ -4,6 +4,6 @@ COPY . /usr/src/cpp_test
 
 WORKDIR /usr/src/cpp_test
 
-RUN g++ -o Test main.cpp
+RUN chmod a+x test.sh
 
-CMD [ "./Test | output.txt", "echo output.txt" ]
+CMD [ "./test.sh" ]

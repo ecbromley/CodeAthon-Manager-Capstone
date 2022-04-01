@@ -14,10 +14,13 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
+    first_name = db.Column(db.String(30), nullable=False)
+    last_name = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+    submissions = db.relationship('Submission', backref='author', lazy=True)
 
     def get_reset_token(self):
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -45,3 +48,29 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
+
+
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+
+class Contest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    start_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    location = db.Column(db.String(100), nullable=False)
+
+class Challenge(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    
+

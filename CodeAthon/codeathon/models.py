@@ -66,8 +66,9 @@ class Role(db.Model):
 class Contest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    start_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    location = db.Column(db.String(100), nullable=False)
+    end_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=True)
 
 class Challenge(db.Model):
     id = db.Column(db.Integer, primary_key=True)

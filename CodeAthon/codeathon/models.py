@@ -67,7 +67,7 @@ class Team(db.Model):
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    users = db.relationship("User", backref="user", lazy=True)
+    users = db.relationship("User", backref="role", lazy=True)
 
 
 class Contest(db.Model):

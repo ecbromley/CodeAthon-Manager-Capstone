@@ -11,7 +11,7 @@ admin = Blueprint("admin", __name__)
 @admin.route("/contest/new", methods=["GET", "POST"])
 @login_required
 def new_contest():
-    if current_user.role_id != "3":
+    if current_user.role.id != 3:
         abort(403)
     form = ContestForm()
     if form.validate_on_submit():
@@ -42,7 +42,7 @@ def contest(contest_id):
 @admin.route("/contest/<int:contest_id>/update", methods=["GET", "POST"])
 @login_required
 def update_contest(contest_id):
-    if current_user.role_id != "3":
+    if current_user.role.id != 3:
         abort(403)
     contest = Contest.query.get_or_404(contest_id)
     form = ContestForm()
@@ -67,7 +67,7 @@ def update_contest(contest_id):
 @admin.route("/contest/<int:contest_id>/delete", methods=["POST"])
 @login_required
 def delete_contest(contest_id):
-    if current_user.role_id != "3":
+    if current_user.role.id != 3:
         abort(403)
     contest = Contest.query.get_or_404(contest_id)
     db.session.delete(contest)
@@ -80,7 +80,7 @@ def delete_contest(contest_id):
 @login_required
 def create_fake_users():
     """Generate fake users."""
-    if current_user.role_id != "3":
+    if current_user.role.id != 3:
         abort(403)
     faker = Faker()
     hashed_password = bcrypt.generate_password_hash("test").decode("utf-8")

@@ -17,20 +17,21 @@ class User(db.Model, UserMixin):
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    image_file = db.Column(db.String(20), nullable=False, default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
-    posts = db.relationship('Post', backref='author', lazy=True)
-    submissions = db.relationship('Submission', backref='author', lazy=True)
+    posts = db.relationship("Post", backref="author", lazy=True)
+    submissions = db.relationship("Submission", backref="author", lazy=True)
+    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
 
     def get_reset_token(self):
-        s = Serializer(current_app.config['SECRET_KEY'])
-        return s.dumps({'user_id': self.id})
+        s = Serializer(current_app.config["SECRET_KEY"])
+        return s.dumps({"user_id": self.id})
 
     @staticmethod
     def verify_reset_token(token, expires_sec=1800):
-        s = Serializer(current_app.config['SECRET_KEY'])
+        s = Serializer(current_app.config["SECRET_KEY"])
         try:
-            user_id = s.loads(token, expires_sec)['user_id']
+            user_id = s.loads(token, expires_sec)["user_id"]
         except:
             return None
         return User.query.get(user_id)
@@ -44,7 +45,7 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
@@ -52,16 +53,22 @@ class Post(db.Model):
 
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    time_submitted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    results = db.Column(db.Text, nullable=False)
 
 
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
 
+
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    users = db.relationship("User", backref="user", lazy=True)
+
 
 class Contest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,8 +77,7 @@ class Contest(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=True)
 
+
 class Challenge(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
-    
-

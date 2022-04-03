@@ -1,8 +1,8 @@
-"""empty message
+"""Initial
 
-Revision ID: 74d78f6392ab
+Revision ID: 8024df43d1b5
 Revises: 
-Create Date: 2022-04-01 18:49:46.683625
+Create Date: 2022-04-03 07:52:03.868447
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '74d78f6392ab'
+revision = '8024df43d1b5'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('challenge',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=200), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_challenge'))
     )
     op.create_table('contest',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -29,17 +29,17 @@ def upgrade():
     sa.Column('end_date_time', sa.DateTime(), nullable=False),
     sa.Column('title', sa.String(length=200), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_contest'))
     )
     op.create_table('role',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_role'))
     )
     op.create_table('team',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_team'))
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -49,9 +49,11 @@ def upgrade():
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('image_file', sa.String(length=20), nullable=False),
     sa.Column('password', sa.String(length=60), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('username')
+    sa.Column('role_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['role_id'], ['role.id'], name=op.f('fk_user_role_id_role')),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_user')),
+    sa.UniqueConstraint('email', name=op.f('uq_user_email')),
+    sa.UniqueConstraint('username', name=op.f('uq_user_username'))
     )
     op.create_table('post',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -59,14 +61,17 @@ def upgrade():
     sa.Column('date_posted', sa.DateTime(), nullable=False),
     sa.Column('content', sa.Text(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], name=op.f('fk_post_user_id_user')),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_post'))
     )
     op.create_table('submission',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('title', sa.String(length=100), nullable=False),
+    sa.Column('time_submitted', sa.DateTime(), nullable=False),
+    sa.Column('results', sa.Text(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], name=op.f('fk_submission_user_id_user')),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_submission'))
     )
     # ### end Alembic commands ###
 

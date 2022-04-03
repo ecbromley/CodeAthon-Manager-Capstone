@@ -29,6 +29,7 @@ def register():
             last_name=form.last_name.data,
             email=form.email.data,
             password=hashed_password,
+            role_id="1",
         )
         db.session.add(user)
         db.session.commit()

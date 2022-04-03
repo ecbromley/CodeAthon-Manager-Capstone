@@ -32,9 +32,22 @@
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
             {% if current_user.is_authenticated %}
-              <a class="nav-item nav-link" href="{{ url_for('posts.new_post') }}">New Post</a>
+              {% if current_user.role_id == 3 %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Admin
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="{{ url_for('admin.new_contest') }}">Add Contest</a></li>
+                    <li><a class="dropdown-item" href="#">Challenges</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('admin.create_fake_users') }}">Add Fake Users</a></li>
+                  </ul>
+                </li>
+              {% endif %}
+              <a class="nav-item nav-link" href="{{ url_for('posts.new_post') }}">Code Submission</a>
               <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>
               <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
+              
             {% else %}
               <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
               <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
@@ -60,13 +73,13 @@
       </div>
       <div class="col-md-4">
         <div class="content-section">
-          <h3>Our Sidebar</h3>
-          <p class='text-muted'>You can put any information here you'd like.
+          <h3>Team Scores</h3>
+          <p class='text-muted'>The scores below will be frozen 1 hour before the competion ends.
             <ul class="list-group">
-              <li class="list-group-item list-group-item-light">Latest Posts</li>
-              <li class="list-group-item list-group-item-light">Announcements</li>
-              <li class="list-group-item list-group-item-light">Calendars</li>
-              <li class="list-group-item list-group-item-light">etc</li>
+              <li class="list-group-item list-group-item-light">Blue Team</li>
+              <li class="list-group-item list-group-item-light">Red Team</li>
+              <li class="list-group-item list-group-item-light">Black Team</li>
+              <li class="list-group-item list-group-item-light">White Team</li>
             </ul>
           </p>
         </div>

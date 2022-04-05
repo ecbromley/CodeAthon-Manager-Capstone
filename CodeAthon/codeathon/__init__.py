@@ -40,14 +40,12 @@ def create_app(config_class=Config):
     from codeathon.challenges.routes import challenges
     from codeathon.errors.handlers import errors
     from codeathon.main.routes import main
-    from codeathon.posts.routes import posts
     from codeathon.users.routes import users
 
     app.register_blueprint(admin)
     app.register_blueprint(challenges)
     app.register_blueprint(errors)
     app.register_blueprint(main)
-    app.register_blueprint(posts)
     app.register_blueprint(users)
 
     return app

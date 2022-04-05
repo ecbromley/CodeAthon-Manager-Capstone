@@ -20,7 +20,7 @@ admin = Blueprint("admin", __name__)
 @admin.route("/contest/new", methods=["GET", "POST"])
 @login_required
 def new_contest():
-    if current_user.role.id != 3:
+    if current_user.user_role.id != 3:
         abort(403)
     form = ContestForm()
     if form.validate_on_submit():
@@ -51,7 +51,7 @@ def contest(contest_id):
 @admin.route("/contest/<int:contest_id>/update", methods=["GET", "POST"])
 @login_required
 def update_contest(contest_id):
-    if current_user.role.id != 3:
+    if current_user.user_role.id != 3:
         abort(403)
     contest = Contest.query.get_or_404(contest_id)
     form = ContestForm()
@@ -76,7 +76,7 @@ def update_contest(contest_id):
 @admin.route("/contest/<int:contest_id>/delete", methods=["POST"])
 @login_required
 def delete_contest(contest_id):
-    if current_user.role.id != 3:
+    if current_user.user_role.id != 3:
         abort(403)
     contest = Contest.query.get_or_404(contest_id)
     db.session.delete(contest)
@@ -87,6 +87,8 @@ def delete_contest(contest_id):
 
 @admin.route("/users_table")
 def users_table():
+    if current_user.user_role.id != 3:
+        abort(403)
     users = User.query
     return render_template("admin/users_table.html", title="Users Table", users=users)
 
@@ -95,7 +97,7 @@ def users_table():
 @login_required
 def create_fake_users():
     """Generate fake users."""
-    if current_user.role.id != 3:
+    if current_user.user_role.id != 3:
         abort(403)
     faker = Faker()
     hashed_password = bcrypt.generate_password_hash("test").decode("utf-8")
@@ -109,7 +111,7 @@ def create_fake_users():
             last_name=lname,
             image_file="default.jpg",
             password=hashed_password,
-            role_id="1",
+            role="1",
             email=faker.email(),
         )
         db.session.add(user)
@@ -121,7 +123,7 @@ def create_fake_users():
 @admin.route("/user/<string:username>", methods=["GET", "POST"])
 @login_required
 def user_admin(username):
-    if current_user.role.id != 3:
+    if current_user.user_role.id != 3:
         abort(403)
     user = User.query.filter_by(username=username).first_or_404()
     form = AdminUpdateUserForm()
@@ -153,7 +155,7 @@ def user_admin(username):
 @admin.route("/user/<int:user_id>/delete", methods=["POST"])
 @login_required
 def delete_user(user_id):
-    if current_user.role.id != 3:
+    if current_user.user_role.id != 3:
         abort(403)
     user = User.query.get_or_404(user_id)
     db.session.delete(user)

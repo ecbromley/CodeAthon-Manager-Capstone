@@ -1,5 +1,6 @@
 from datetime import datetime
-import imp
+
+# import imp
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from flask import current_app
 from codeathon import db, login_manager
@@ -11,6 +12,70 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+class Challenge(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    support_zip_file = db.Column(db.LargeBinary, nullable=True)
+    code_scoring = db.Column(db.LargeBinary, nullable=True)
+    dockerfile = db.Column(db.LargeBinary, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    submissions = db.relationship(
+        "Submission", backref="submission_challenge", lazy=True
+    )
+
+
+challenges = db.Table(
+    "contest_challenges",
+    db.Column("contest_id", db.Integer, db.ForeignKey("contest.id")),
+    db.Column("challenge_id", db.Integer, db.ForeignKey("challenge.id")),
+)
+
+
+class Contest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    end_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    submissions = db.relationship("Submission", backref="submission_contest", lazy=True)
+    challenges = db.relationship(
+        "Challenge", secondary=challenges, backref="challenge_contest", lazy=True
+    )
+
+
+class Language(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    submissions = db.relationship(
+        "Submission", backref="submission_language", lazy=True
+    )
+
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    users = db.relationship("User", backref="user_role", lazy=True)
+
+
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    time_submitted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    code_file = db.Column(db.LargeBinary, nullable=True)
+    code_output = db.Column(db.LargeBinary, nullable=True)
+    score = db.Column(db.Integer, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    contest_id = db.Column(db.Integer, db.ForeignKey("contest.id"), nullable=False)
+    challenge_id = db.Column(db.Integer, db.ForeignKey("challenge.id"), nullable=False)
+    language_id = db.Column(db.Integer, db.ForeignKey("language.id"), nullable=False)
+
+
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    users = db.relationship("User", backref="user_team", lazy=True)
+
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
@@ -19,9 +84,10 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
-    posts = db.relationship("Post", backref="author", lazy=True)
-    submissions = db.relationship("Submission", backref="author", lazy=True)
-    role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
+    role = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
+    team = db.Column(db.Integer, db.ForeignKey("team.id"), nullable=True)
+    submissions = db.relationship("Submission", backref="submission_author", lazy=True)
+    challenges = db.relationship("Challenge", backref="challenge_author", lazy=True)
 
     def get_reset_token(self):
         s = Serializer(current_app.config["SECRET_KEY"])
@@ -38,48 +104,3 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
-
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-
-    def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}')"
-
-
-class Submission(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    title = db.Column(db.String(100), nullable=False)
-    time_submitted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    results = db.Column(db.Text, nullable=False)
-
-
-class Team(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-
-
-class Role(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    users = db.relationship("User", backref="role", lazy=True)
-
-
-class Contest(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    start_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    end_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    title = db.Column(db.String(200), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-
-
-class Challenge(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    files = db.Column(db.LargeBinary, nullable=True)

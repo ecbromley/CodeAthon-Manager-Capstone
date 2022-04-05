@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from codeathon import db, bcrypt
-from codeathon.models import User, Post
+from codeathon.models import User
 from codeathon.users.forms import (
     RegistrationForm,
     LoginForm,
@@ -29,7 +29,7 @@ def register():
             last_name=form.last_name.data,
             email=form.email.data,
             password=hashed_password,
-            role_id="1",
+            role="1",
         )
         db.session.add(user)
         db.session.commit()

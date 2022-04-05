@@ -1,8 +1,17 @@
-from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
+from flask import (
+    render_template,
+    g,
+    url_for,
+    flash,
+    redirect,
+    request,
+    abort,
+    Blueprint,
+)
 from flask_login import current_user, login_required
 from codeathon import db, bcrypt
 from codeathon.models import Contest, Submission, Role, Team, Challenge, User
-from codeathon.admin.forms import ContestForm
+from codeathon.admin.forms import ContestForm, AdminUpdateUserForm
 from faker import Faker
 
 admin = Blueprint("admin", __name__)
@@ -76,6 +85,12 @@ def delete_contest(contest_id):
     return redirect(url_for("main.home"))
 
 
+@admin.route("/users_table")
+def users_table():
+    users = User.query
+    return render_template("admin/users_table.html", title="Users Table", users=users)
+
+
 @admin.route("/create_fake_users")
 @login_required
 def create_fake_users():
@@ -101,3 +116,47 @@ def create_fake_users():
     db.session.commit()
     flash("Your users have been created!", "success")
     return redirect(url_for("main.home"))
+
+
+@admin.route("/user/<string:username>", methods=["GET", "POST"])
+@login_required
+def user_admin(username):
+    if current_user.role.id != 3:
+        abort(403)
+    user = User.query.filter_by(username=username).first_or_404()
+    form = AdminUpdateUserForm()
+    g.user = user
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = user.save_picture(form.picture.data)
+            user.image_file = picture_file
+        user.username = form.username.data
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        user.email = form.email.data
+        db.session.commit()
+        flash("The user account has been updated!", "success")
+        return redirect(url_for("admin.users_table"))
+    elif request.method == "GET":
+        form.id.data = user.id
+        form.username.data = user.username
+        form.og_username.data = user.username
+        form.first_name.data = user.first_name
+        form.last_name.data = user.last_name
+        form.email.data = user.email
+    image_file = url_for("static", filename="profile_pics/" + user.image_file)
+    return render_template(
+        "admin/user.html", title="User", image_file=image_file, form=form, user=user
+    )
+
+
+@admin.route("/user/<int:user_id>/delete", methods=["POST"])
+@login_required
+def delete_user(user_id):
+    if current_user.role.id != 3:
+        abort(403)
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    flash("The user has been deleted!", "success")
+    return redirect(url_for("admin.users_table"))

@@ -75,9 +75,11 @@ class Contest(db.Model):
     start_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     end_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     title = db.Column(db.String(200), nullable=False)
-    description = db.Column(db.Text, nullable=True)
+    description = db.Column(db.Text, nullable=False)
 
 
 class Challenge(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    files = db.Column(db.LargeBinary, nullable=True)

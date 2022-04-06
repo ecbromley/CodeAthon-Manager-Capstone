@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <!-- CodeAthon CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
 
     {% if title %}
         <title>CodeAthon - {{ title }}</title>
@@ -32,9 +33,22 @@
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
             {% if current_user.is_authenticated %}
-              <a class="nav-item nav-link" href="{{ url_for('posts.new_post') }}">New Post</a>
+              {% if current_user.user_role.id == 3 %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Admin
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="{{ url_for('admin.new_contest') }}">Contests</a></li>
+                    <li><a class="dropdown-item" href="#">Challenges</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('admin.users_table') }}">Users</a></li>
+                  </ul>
+                </li>
+              {% endif %}
+              <a class="nav-item nav-link" href="{{ url_for('admin.new_contest') }}">Code Submission</a>
               <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>
               <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
+              
             {% else %}
               <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
               <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
@@ -60,20 +74,24 @@
       </div>
       <div class="col-md-4">
         <div class="content-section">
-          <h3>Our Sidebar</h3>
-          <p class='text-muted'>You can put any information here you'd like.
+          <h3>Team Scores</h3>
+          <p class='text-muted'>The scores below will be frozen 1 hour before the competion ends.
             <ul class="list-group">
-              <li class="list-group-item list-group-item-light">Latest Posts</li>
-              <li class="list-group-item list-group-item-light">Announcements</li>
-              <li class="list-group-item list-group-item-light">Calendars</li>
-              <li class="list-group-item list-group-item-light">etc</li>
+              <li class="list-group-item list-group-item-light">Blue Team</li>
+              <li class="list-group-item list-group-item-light">Red Team</li>
+              <li class="list-group-item list-group-item-light">Black Team</li>
+              <li class="list-group-item list-group-item-light">White Team</li>
             </ul>
           </p>
         </div>
       </div>
     </div>
   </main>
-    <!-- Bootstrap Bundle with Popper -->
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+  <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

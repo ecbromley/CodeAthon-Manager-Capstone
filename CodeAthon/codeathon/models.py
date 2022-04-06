@@ -1,6 +1,4 @@
 from datetime import datetime
-
-# import imp
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from flask import current_app
 from codeathon import db, login_manager

@@ -11,7 +11,7 @@ from flask import (
 from flask_login import current_user, login_required
 from codeathon import db, bcrypt
 from codeathon.models import Contest, Submission, Role, Team, Challenge, User
-from codeathon.admin.forms import ContestForm, AdminUpdateUserForm
+from codeathon.admin.forms import ContestForm, ContestFormUpdate, AdminUpdateUserForm
 from faker import Faker
 
 admin = Blueprint("admin", __name__)
@@ -48,25 +48,39 @@ def contest(contest_id):
     return render_template("admin/contest.html", title=contest.title, contest=contest)
 
 
+@admin.route("/contests_table")
+def contests_table():
+    if current_user.user_role.id != 3:
+        abort(403)
+    contests = Contest.query
+    return render_template(
+        "admin/contests_table.html", title="Contests Table", contests=contests
+    )
+
+
 @admin.route("/contest/<int:contest_id>/update", methods=["GET", "POST"])
 @login_required
 def update_contest(contest_id):
     if current_user.user_role.id != 3:
         abort(403)
     contest = Contest.query.get_or_404(contest_id)
-    form = ContestForm()
+    form = ContestFormUpdate()
     if form.validate_on_submit():
         contest.title = form.title.data
         contest.description = form.description.data
+        contest.start_date_time = form.start_date_time.data
+        contest.end_date_time = form.end_date_time.data
 
         db.session.commit()
         flash("Your contest has been updated!", "success")
         return redirect(url_for("admin.contest", contest_id=contest.id))
     elif request.method == "GET":
         form.title.data = contest.title
-        form.content.data = contest.content
+        form.description.data = contest.description
+        form.start_date_time.data = contest.start_date_time
+        form.end_date_time.data = contest.end_date_time
     return render_template(
-        "create_contest.html",
+        "admin/create_contest.html",
         title="Update Contest",
         form=form,
         legend="Update Contest",
@@ -117,7 +131,7 @@ def create_fake_users():
         db.session.add(user)
     db.session.commit()
     flash("Your users have been created!", "success")
-    return redirect(url_for("main.home"))
+    return redirect(url_for("admin.users_table"))
 
 
 @admin.route("/user/<string:username>", methods=["GET", "POST"])

@@ -23,6 +23,18 @@ class ContestForm(FlaskForm):
     submit = SubmitField("Add")
 
 
+class ContestFormUpdate(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[DataRequired()])
+    start_date_time = DateTimeLocalField(
+        "Start Date and Time", format="%Y-%m-%dT%H:%M", validators=[DataRequired()]
+    )
+    end_date_time = DateTimeLocalField(
+        "End Date and Time", format="%Y-%m-%dT%H:%M", validators=[DataRequired()]
+    )
+    submit = SubmitField("Update")
+
+
 class AdminUpdateUserForm(FlaskForm):
     id = IntegerField()
     username = StringField(

@@ -39,8 +39,9 @@
                     Admin
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <li><a class="dropdown-item" href="{{ url_for('admin.new_contest') }}">Contests</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('admin.contests_table') }}">Contests</a></li>
                     <li><a class="dropdown-item" href="#">Challenges</a></li>
+                    <li><a class="dropdown-item" href="#">Submissions</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('admin.users_table') }}">Users</a></li>
                   </ul>
                 </li>

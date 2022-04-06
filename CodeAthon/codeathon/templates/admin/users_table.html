@@ -25,6 +25,9 @@
       {% endfor %}
     </tbody>
   </table>
+  <div>
+    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.user_add') }}">Add User</a>
+  </div>
 {% endblock %}
 {% block scripts %}
   <script>

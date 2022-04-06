@@ -11,7 +11,12 @@ from flask import (
 from flask_login import current_user, login_required
 from codeathon import db, bcrypt
 from codeathon.models import Contest, Submission, Role, Team, Challenge, User
-from codeathon.admin.forms import ContestForm, ContestFormUpdate, AdminUpdateUserForm
+from codeathon.admin.forms import (
+    AddUserForm,
+    ContestForm,
+    ContestFormUpdate,
+    AdminUpdateUserForm,
+)
 from faker import Faker
 
 admin = Blueprint("admin", __name__)
@@ -35,7 +40,7 @@ def new_contest():
         flash("Your contest has been created!", "success")
         return redirect(url_for("admin.contest", contest_id=contest.id))
     return render_template(
-        "admin/create_contest.html",
+        "admin/contest_add.html",
         title="New Contest",
         form=form,
         legend="New Contest",
@@ -80,7 +85,7 @@ def update_contest(contest_id):
         form.start_date_time.data = contest.start_date_time
         form.end_date_time.data = contest.end_date_time
     return render_template(
-        "admin/create_contest.html",
+        "admin/contest_add.html",
         title="Update Contest",
         form=form,
         legend="Update Contest",
@@ -105,6 +110,30 @@ def users_table():
         abort(403)
     users = User.query
     return render_template("admin/users_table.html", title="Users Table", users=users)
+
+
+@admin.route("/user_add", methods=["GET", "POST"])
+def user_add():
+    if current_user.user_role.id != 3:
+        abort(403)
+    form = AddUserForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
+            "utf-8"
+        )
+        user = User(
+            username=form.username.data,
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            email=form.email.data,
+            password=hashed_password,
+            role=form.role_id.data,
+        )
+        db.session.add(user)
+        db.session.commit()
+        flash("The user has been created!", "success")
+        return redirect(url_for("admin.users_table"))
+    return render_template("admin/user_add.html", title="Register", form=form)
 
 
 @admin.route("/create_fake_users")
@@ -150,6 +179,7 @@ def user_admin(username):
         user.first_name = form.first_name.data
         user.last_name = form.last_name.data
         user.email = form.email.data
+        user.role = form.role.data
         db.session.commit()
         flash("The user account has been updated!", "success")
         return redirect(url_for("admin.users_table"))
@@ -160,6 +190,7 @@ def user_admin(username):
         form.first_name.data = user.first_name
         form.last_name.data = user.last_name
         form.email.data = user.email
+        form.role.data = user.role
     image_file = url_for("static", filename="profile_pics/" + user.image_file)
     return render_template(
         "admin/user.html", title="User", image_file=image_file, form=form, user=user

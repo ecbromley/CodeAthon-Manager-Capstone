@@ -1,19 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="content-section">
-      <div class="media">
-        <img class="rounded-circle account-img" src="{{ image_file }}">
-        <div class="media-body">
-          <h2 class="account-heading">{{ user.first_name }} {{ user.last_name }}</h2>
-          <p class="text-secondary">{{ user.email }} <br>Role: {{ user.user_role.name }}</p>
-        </div>
-      </div>
-        <form method="POST" action="" enctype="multipart/form-data">
+        <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Account Info</legend>
+                <legend class="border-bottom mb-4">Add User</legend>
                 <div class="form-group">
                     {{ form.username.label(class="form-control-label") }}
+
                     {% if form.username.errors %}
                         {{ form.username(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -27,6 +21,7 @@
                 </div>
                 <div class="form-group">
                     {{ form.first_name.label(class="form-control-label") }}
+
                     {% if form.first_name.errors %}
                         {{ form.first_name(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -40,6 +35,7 @@
                 </div>
                 <div class="form-group">
                     {{ form.last_name.label(class="form-control-label") }}
+
                     {% if form.last_name.errors %}
                         {{ form.last_name(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -65,49 +61,54 @@
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    {{ form.role.label(class="form-control-label") }}
-                    {% if form.role.errors %}
-                        {{ form.role(class="form-control form-control-lg is-invalid") }}
+                  {{ form.role.label(class="form-control-label") }}
+                  {% if form.role.errors %}
+                      {{ form.role(class="form-control form-control-lg is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.role.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form.role(class="form-control form-control-lg") }}
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-control-label") }}
+                    {% if form.password.errors %}
+                        {{ form.password(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
-                            {% for error in form.role.errors %}
+                            {% for error in form.password.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.role(class="form-control form-control-lg") }}
+                        {{ form.password(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    {{ form.picture.label() }}
-                    {{ form.picture(class="form-control-file") }}
-                    {% if form.picture.errors %}
-                        {% for error in form.picture.errors %}
-                            <span class="text-danger">{{ error }}</span></br>
-                        {% endfor %}
+                    {{ form.confirm_password.label(class="form-control-label") }}
+                    {% if form.confirm_password.errors %}
+                        {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.confirm_password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.confirm_password(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-primary btn-sm m-1") }}
-                <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                {{ form.submit(class="btn btn-primary") }}
             </div>
         </form>
     </div>
-    <!-- Modal -->
-  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="deleteModalLabel">Delete User?</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <form action="{{ url_for('admin.delete_user', user_id=user.id) }}" method="POST">
-            <input class="btn btn-danger" type="submit" value="Delete">
-          </form>
-        </div>
-      </div>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Roles: 1 = User, 2 = Contributor, 3 = Admin<br>
+            
+        </small>
     </div>
-  </div>
 {% endblock content %}

@@ -14,9 +14,12 @@ class Challenge(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    support_zip_file = db.Column(db.LargeBinary, nullable=True)
-    code_scoring = db.Column(db.LargeBinary, nullable=True)
-    dockerfile = db.Column(db.LargeBinary, nullable=True)
+    supportzip_data = db.Column(db.LargeBinary, nullable=True)
+    supportzip_filename = db.Column(db.String(50), nullable=True)
+    code_scorer_data = db.Column(db.LargeBinary, nullable=True)
+    code_scorer_filename = db.Column(db.String(50), nullable=True)
+    dockerfile_data = db.Column(db.LargeBinary, nullable=True)
+    dockerfile_filename = db.Column(db.String(50), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     submissions = db.relationship(
         "Submission", backref="submission_challenge", lazy=True
@@ -59,8 +62,10 @@ class Role(db.Model):
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_submitted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    code_file = db.Column(db.LargeBinary, nullable=True)
-    code_output = db.Column(db.LargeBinary, nullable=True)
+    code_filename = db.Column(db.String(50), nullable=True)
+    code_data = db.Column(db.LargeBinary, nullable=True)
+    code_output_filename = db.Column(db.String(50), nullable=True)
+    code_output_data = db.Column(db.LargeBinary, nullable=True)
     score = db.Column(db.Integer, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     contest_id = db.Column(db.Integer, db.ForeignKey("contest.id"), nullable=False)

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for challenge in challenges %}
+        <tr>
+          <td>{{ challenge.id }}</td>
+          <td><a class="nav-item nav-link" href="{{ url_for('admin.challenge', challenge_id=challenge.id) }}">{{ challenge.title }}</a></td>
+          <td>{{ challenge.description }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div>
+    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.new_challenge') }}">Add challenge</a>
+  </div>
+{% endblock %}
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable();
+    });
+  </script>
+{% endblock %}

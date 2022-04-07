@@ -5,7 +5,10 @@
         <img class="rounded-circle account-img" src="{{ image_file }}">
         <div class="media-body">
           <h2 class="account-heading">{{ current_user.first_name }} {{ current_user.last_name }}</h2>
-          <p class="text-secondary">{{ current_user.email }} <br>Role: {{ current_user.user_role.name }}</p>
+          <p class="text-secondary">{{ current_user.email }} <br>
+            Role: {{ current_user.user_role.name }}<br>
+            Team: {{ current_user.user_team.name }}
+            </p>
         </div>
       </div>
         <form method="POST" action="" enctype="multipart/form-data">

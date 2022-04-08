@@ -65,6 +65,11 @@ def logout():
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
+        if form.password.data:
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
+                "utf-8"
+            )
+            current_user.password = hashed_password
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
             current_user.image_file = picture_file

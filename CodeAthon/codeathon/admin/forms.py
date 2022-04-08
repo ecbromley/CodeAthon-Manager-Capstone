@@ -100,6 +100,10 @@ class AdminUpdateUserForm(FlaskForm):
     picture = FileField(
         "Update Profile Picture", validators=[FileAllowed(["jpg", "jpeg", "png"])]
     )
+    password = PasswordField("Password", validators=[DataRequired()])
+    confirm_password = PasswordField(
+        "Confirm Password", validators=[DataRequired(), EqualTo("password")]
+    )
     submit = SubmitField("Update")
 
     def validate_username(self, username):

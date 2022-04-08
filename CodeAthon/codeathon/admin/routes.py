@@ -307,6 +307,11 @@ def user_admin(username):
     form = AdminUpdateUserForm()
     g.user = user
     if form.validate_on_submit():
+        if form.password.data:
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode(
+                "utf-8"
+            )
+            current_user.password = hashed_password
         if form.picture.data:
             picture_file = user.save_picture(form.picture.data)
             user.image_file = picture_file

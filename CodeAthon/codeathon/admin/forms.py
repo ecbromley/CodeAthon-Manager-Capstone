@@ -100,9 +100,9 @@ class AdminUpdateUserForm(FlaskForm):
     picture = FileField(
         "Update Profile Picture", validators=[FileAllowed(["jpg", "jpeg", "png"])]
     )
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password")
     confirm_password = PasswordField(
-        "Confirm Password", validators=[DataRequired(), EqualTo("password")]
+        "Confirm Password", validators=[EqualTo("password")]
     )
     submit = SubmitField("Update")
 

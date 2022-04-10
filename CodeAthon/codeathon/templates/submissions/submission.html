@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+  <article class="media content-section">
+    <div class="media-body">
+      <h2 class="article-title">{{ challenge.title }}</h2>
+      <p class="article-content">{{ challenge.description }}</p>
+      <ul>
+        <li>Support Files: <a href="{{ url_for('challenges.download', challenge_id=challenge.id, filetype='supportzip') }}">{{ challenge.supportzip_filename }}</a></li>
+        <li>Code Scoring File: <a href="{{ url_for('challenges.download', challenge_id=challenge.id, filetype='code_scorer') }}">{{ challenge.code_scorer_filename }}</a></li>
+        <li>Docker File: <a href="{{ url_for('challenges.download', challenge_id=challenge.id, filetype='dockerfile') }}">{{ challenge.dockerfile_filename }}</a></li>
+      </ul>
+    </div>
+    <div class="article-metadata">
+      {% if current_user == current_user %}
+        <div>
+          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('challenges.update_challenge', challenge_id=challenge.id) }}">Update</a>
+          <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+        </div>
+      {% endif %}
+    </div>
+  </article>
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete challenge?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <form action="{{ url_for('challenges.delete_challenge', challenge_id=challenge.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

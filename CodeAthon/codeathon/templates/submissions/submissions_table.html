@@ -10,17 +10,17 @@
       </tr>
     </thead>
     <tbody>
-      {% for challenge in challenges %}
+      {% for submission in submissions %}
         <tr>
-          <td>{{ challenge.id }}</td>
-          <td><a class="nav-item nav-link" href="{{ url_for('admin.challenge', challenge_id=challenge.id) }}">{{ challenge.title }}</a></td>
+          <td>{{ submission.id }}</td>
+          <td><a class="nav-item nav-link" href="{{ url_for('challenges.challenge', challenge_id=challenge.id) }}">{{ challenge.title }}</a></td>
           <td>{{ challenge.description }}</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
   <div>
-    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.new_challenge') }}">Add challenge</a>
+    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('challenges.new_challenge') }}">Add challenge</a>
   </div>
 {% endblock %}
 {% block scripts %}

@@ -10,9 +10,9 @@
       </div>
         <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-            <fieldset class="form-group">
+            <fieldset class="mb-3">
                 <legend class="border-bottom mb-4">Account Info</legend>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form.username.label(class="form-control-label") }}
                     {% if form.username.errors %}
                         {{ form.username(class="form-control form-control-lg is-invalid") }}
@@ -25,7 +25,7 @@
                         {{ form.username(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form.first_name.label(class="form-control-label") }}
                     {% if form.first_name.errors %}
                         {{ form.first_name(class="form-control form-control-lg is-invalid") }}
@@ -38,7 +38,7 @@
                         {{ form.first_name(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form.last_name.label(class="form-control-label") }}
                     {% if form.last_name.errors %}
                         {{ form.last_name(class="form-control form-control-lg is-invalid") }}
@@ -51,7 +51,7 @@
                         {{ form.last_name(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form.email.label(class="form-control-label") }}
                     {% if form.email.errors %}
                         {{ form.email(class="form-control form-control-lg is-invalid") }}
@@ -64,7 +64,7 @@
                         {{ form.email(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form.role.label(class="form-control-label") }}
                     {% if form.role.errors %}
                         {{ form.role(class="form-control form-control-lg is-invalid") }}
@@ -77,7 +77,7 @@
                         {{ form.role(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form.password.label(class="form-control-label") }}
                     {% if form.password.errors %}
                         {{ form.password(class="form-control form-control-lg is-invalid") }}
@@ -90,7 +90,7 @@
                         {{ form.password(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form.confirm_password.label(class="form-control-label") }}
                     {% if form.confirm_password.errors %}
                         {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
@@ -103,7 +103,7 @@
                         {{ form.confirm_password(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form.picture.label() }}
                     {{ form.picture(class="form-control-file") }}
                     {% if form.picture.errors %}
@@ -113,9 +113,10 @@
                     {% endif %}
                 </div>
             </fieldset>
-            <div class="form-group">
+            <div class="mb-3">
                 {{ form.submit(class="btn btn-primary btn-sm m-1") }}
                 <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.users_table') }}">Cancel</a>
             </div>
         </form>
     </div>

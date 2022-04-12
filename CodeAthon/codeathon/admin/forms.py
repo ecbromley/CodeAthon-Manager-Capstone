@@ -2,8 +2,16 @@ from flask import g
 from wsgiref.validate import validator
 from flask_wtf import FlaskForm
 from wtforms.fields import DateTimeLocalField
-from wtforms import PasswordField, StringField, SubmitField, TextAreaField, IntegerField
+from wtforms import (
+    PasswordField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+    IntegerField,
+    SelectField,
+)
 from wtforms.validators import (
+    AnyOf,
     DataRequired,
     Length,
     Email,
@@ -57,6 +65,28 @@ class ContestFormUpdate(FlaskForm):
     end_date_time = DateTimeLocalField(
         "End Date and Time", format="%Y-%m-%dT%H:%M", validators=[DataRequired()]
     )
+    submit = SubmitField("Update")
+
+
+class LanguageForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    submit = SubmitField("Add")
+
+
+class LanguageFormUpdate(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    submit = SubmitField("Update")
+
+
+class TeamForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    contest = SelectField("Contest", choices=[], validators=[DataRequired()])
+    submit = SubmitField("Add")
+
+
+class TeamFormUpdate(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    contest = SelectField("Contest", choices=[], validators=[DataRequired()])
     submit = SubmitField("Update")
 
 

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="mb-3">
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
+            <div class="mb-3">
+                {{ form.name.label(class="form-control-label") }}
+                {% if form.name.errors %}
+                    {{ form.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.name(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="mb-3">
+            {{ form.submit(class="btn btn-primary btn-sm") }}
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.languages_table') }}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock content %}

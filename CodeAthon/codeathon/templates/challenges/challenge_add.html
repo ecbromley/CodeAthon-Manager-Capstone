@@ -64,7 +64,8 @@
             </div>
         </fieldset>
         <div class="mb-3">
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-primary btn-sm") }}
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('challenges.challenges_table') }}">Cancel</a>
         </div>
     </form>
 </div>

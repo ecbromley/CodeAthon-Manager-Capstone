@@ -40,6 +40,7 @@ class Contest(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     submissions = db.relationship("Submission", backref="submission_contest", lazy=True)
+    teams = db.relationship("Team", backref="contest_team", lazy=True)
     challenges = db.relationship(
         "Challenge", secondary=challenges, backref="challenge_contest", lazy=True
     )
@@ -76,6 +77,7 @@ class Submission(db.Model):
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    contest_id = db.Column(db.Integer, db.ForeignKey("contest.id"), nullable=False)
     users = db.relationship("User", backref="user_team", lazy=True)
 
 

@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="media-body">
+  <h2 class="article-title article-metadata mb-3">{{ title }}</h2>
+</div>
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for language in languages %}
+        <tr>
+          <td>{{ language.id }}</a></td>
+          <td><a class="nav-item nav-link" href="{{ url_for('admin.update_language', language_id=language.id) }}">{{ language.name }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div>
+    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.language_add') }}">Add Language</a>
+  </div>
+{% endblock %}
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable();
+    });
+  </script>
+{% endblock %}

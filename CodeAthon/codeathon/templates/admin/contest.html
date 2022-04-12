@@ -9,8 +9,9 @@
     <div class="article-metadata">
       {% if current_user == current_user %}
         <div>
-          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.update_contest', contest_id=contest.id) }}">Update</a>
+          <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.update_contest', contest_id=contest.id) }}">Update</a>
           <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.contests_table') }}">Cancel</a>
         </div>
       {% endif %}
     </div>

@@ -191,9 +191,12 @@ def update_language(language_id):
 @login_required
 def team(team_id):
     team = Team.query.get_or_404(team_id)
-    contests = Contest.query.order_by(Contest.start_date_time.desc())
+    # contests = Contest.query.order_by(Contest.start_date_time.desc())
+
     return render_template(
-        "admin/team.html", title=team.name, team=team, contests=contests
+        "admin/team.html",
+        title=team.name,
+        team=team,  # contests=contests
     )
 
 
@@ -240,7 +243,7 @@ def delete_team(team_id):
     db.session.delete(team)
     db.session.commit()
     flash("The team has been deleted!", "success")
-    return redirect(url_for("admin.team_table"))
+    return redirect(url_for("admin.teams_table"))
 
 
 @admin.route("/team/<int:team_id>/update", methods=["GET", "POST"])
@@ -249,6 +252,7 @@ def update_team(team_id):
     if current_user.user_role.id != 3:
         abort(403)
     team = Team.query.get_or_404(team_id)
+    users = User.query
     form = TeamFormUpdate()
     form.contest.choices = [
         (contest.id, contest.title)
@@ -265,10 +269,38 @@ def update_team(team_id):
         form.contest.data = team.contest_id
     return render_template(
         "admin/team_add.html",
-        title="Update team",
+        title="Update Team",
         form=form,
-        legend="Update team",
+        team=team,
+        users=users,
+        legend="Update Team",
     )
+
+
+@admin.route("/team_member_add/<int:team_id>/<int:user_id>", methods=["GET", "POST"])
+@login_required
+def team_member_add(team_id, user_id):
+    if current_user.user_role.id != 3:
+        abort(403)
+    team = Team.query.get_or_404(team_id)
+    member = User.query.get_or_404(user_id)
+    team.members.append(member)
+    db.session.commit()
+    return redirect(url_for("admin.update_team", team_id=team.id))
+
+
+@admin.route(
+    "/team_member_add/<int:team_id>/<int:user_id>/delete", methods=["GET", "POST"]
+)
+@login_required
+def team_member_delete(team_id, user_id):
+    if current_user.user_role.id != 3:
+        abort(403)
+    team = Team.query.get_or_404(team_id)
+    member = User.query.get_or_404(user_id)
+    team.members.remove(member)
+    db.session.commit()
+    return redirect(url_for("admin.team", team_id=team.id))
 
 
 #######Users#######

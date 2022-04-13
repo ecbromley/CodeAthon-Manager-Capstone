@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="media-body">
+    <h2 class="article-title article-metadata mb-3">{{ title }}</h2>
+  </div>
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>UserID</th>
+        <th>Username</th>
+        <th>First</th>
+        <th>Last</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</a></td>
+          <td><a class="nav-item nav-link" href="{{ url_for('admin.user_admin', username=user.username) }}">{{ user.username }}</td>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.user_role.name }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div>
+    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.user_add') }}">Add User</a>
+  </div>
+{% endblock %}
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable();
+    });
+  </script>
+{% endblock %}

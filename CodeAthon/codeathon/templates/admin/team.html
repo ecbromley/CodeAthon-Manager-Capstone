@@ -13,7 +13,6 @@
         <th>Last</th>
         <th>Email</th>
         <th>Role</th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -24,23 +23,6 @@
           <td>{{ member.last_name }}</td>
           <td>{{ member.email }}</td>
           <td>{{ member.user_role.name }}</td>
-          <td><button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#removeModal">Remove</button></td>
-          <div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="deleteModalLabel">Remove Member?</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <form action="{{ url_for('admin.team_member_delete', team_id=team.id, user_id=member.id) }}" method="POST">
-                    <input class="btn btn-danger" type="submit" value="Remove">
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
         </tr>
       {% endfor %}
     </tbody>

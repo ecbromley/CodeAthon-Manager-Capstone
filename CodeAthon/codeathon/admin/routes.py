@@ -58,7 +58,11 @@ def new_contest():
 @admin.route("/contest/<int:contest_id>")
 def contest(contest_id):
     contest = Contest.query.get_or_404(contest_id)
-    return render_template("admin/contest.html", title=contest.title, contest=contest)
+    return render_template(
+        "admin/contest.html",
+        title=contest.title,
+        contest=contest,
+    )
 
 
 @admin.route("/contests_table")
@@ -119,6 +123,36 @@ def delete_contest(contest_id):
     db.session.commit()
     flash("Your contest has been deleted!", "success")
     return redirect(url_for("admin.contests_table"))
+
+
+@admin.route(
+    "/contest_register/<int:contest_id>/<int:user_id>", methods=["GET", "POST"]
+)
+@login_required
+def contest_register(contest_id, user_id):
+    if current_user.id != user_id:
+        if current_user.user_role.id != 3:
+            abort(403)
+    contest = Contest.query.get_or_404(contest_id)
+    member = User.query.get_or_404(user_id)
+    contest.contest_participation.append(member)
+    db.session.commit()
+    flash("You're Registered!!!", "success")
+    return redirect(url_for("main.home"))
+
+
+@admin.route(
+    "/contest_member/<int:contest_id>/<int:user_id>/delete", methods=["GET", "POST"]
+)
+@login_required
+def contest_member_delete(contest_id, user_id):
+    if current_user.user_role.id != 3:
+        abort(403)
+    contest = Contest.query.get_or_404(contest_id)
+    member = User.query.get_or_404(user_id)
+    contest.contest_participation.remove(member)
+    db.session.commit()
+    return redirect(url_for("admin.contest", contest_id=contest.id))
 
 
 #######Languages#######
@@ -252,7 +286,8 @@ def update_team(team_id):
     if current_user.user_role.id != 3:
         abort(403)
     team = Team.query.get_or_404(team_id)
-    users = User.query
+    contest = Contest.query.filter_by(id=team.contest_id).first()
+    users = contest.contest_participation
     form = TeamFormUpdate()
     form.contest.choices = [
         (contest.id, contest.title)
@@ -286,12 +321,14 @@ def team_member_add(team_id, user_id):
     member = User.query.get_or_404(user_id)
     team.members.append(member)
     db.session.commit()
+    message = (
+        member.first_name + " " + member.last_name + " has been added to the team."
+    )
+    flash(message, "success")
     return redirect(url_for("admin.update_team", team_id=team.id))
 
 
-@admin.route(
-    "/team_member_add/<int:team_id>/<int:user_id>/delete", methods=["GET", "POST"]
-)
+@admin.route("/team_member/<int:team_id>/<int:user_id>/delete", methods=["GET", "POST"])
 @login_required
 def team_member_delete(team_id, user_id):
     if current_user.user_role.id != 3:
@@ -300,7 +337,7 @@ def team_member_delete(team_id, user_id):
     member = User.query.get_or_404(user_id)
     team.members.remove(member)
     db.session.commit()
-    return redirect(url_for("admin.team", team_id=team.id))
+    return redirect(url_for("admin.update_team", team_id=team.id))
 
 
 #######Users#######

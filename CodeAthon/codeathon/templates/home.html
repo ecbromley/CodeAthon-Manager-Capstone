@@ -6,5 +6,10 @@
       <h6>From {{ contest.start_date_time }} to {{ contest.end_date_time }}</h6>
       <p class="article-content">{{ contest.description }}</p>
     </div>
+    {% if current_user.is_authenticated %}
+    <div class="d-grid gap-2">
+      <a class="btn btn-primary mt-1 mb-1" href="{{ url_for('admin.contest_register', contest_id=contest.id, user_id=current_user.id) }}">Register Now!</a>
+    </div>
+    {% endif %}
   </article>
 {% endblock content %}

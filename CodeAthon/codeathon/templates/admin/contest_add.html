@@ -57,6 +57,19 @@
                     {{ form.description(class="form-control", rows='15') }}
                 {% endif %}
             </div>
+            <div class="mb-3 form-check form-switch">
+                {{ form.active.label(class="form-check-label") }}
+                {% if form.active.errors %}
+                    {{ form.active(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.active.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.active(class="form-check-input") }}
+                {% endif %}
+            </div>
         </fieldset>
         <div class="mb-3">
             {{ form.submit(class="btn btn-primary btn-sm") }}

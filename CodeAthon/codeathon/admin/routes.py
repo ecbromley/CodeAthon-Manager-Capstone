@@ -41,6 +41,7 @@ def new_contest():
             description=form.description.data,
             start_date_time=form.start_date_time.data,
             end_date_time=form.end_date_time.data,
+            active=form.active.data,
         )
         db.session.add(contest)
         db.session.commit()
@@ -83,6 +84,7 @@ def update_contest(contest_id):
         contest.description = form.description.data
         contest.start_date_time = form.start_date_time.data
         contest.end_date_time = form.end_date_time.data
+        contest.active = form.active.data
         db.session.commit()
         flash("Your contest has been updated!", "success")
         return redirect(url_for("admin.contest", contest_id=contest.id))
@@ -91,6 +93,7 @@ def update_contest(contest_id):
         form.description.data = contest.description
         form.start_date_time.data = contest.start_date_time
         form.end_date_time.data = contest.end_date_time
+        form.active.data = contest.active
     return render_template(
         "admin/contest_add.html",
         title="Update Contest",
@@ -115,7 +118,7 @@ def delete_contest(contest_id):
     db.session.delete(contest)
     db.session.commit()
     flash("Your contest has been deleted!", "success")
-    return redirect(url_for("main.home"))
+    return redirect(url_for("admin.contests_table"))
 
 
 #######Languages#######

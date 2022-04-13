@@ -11,6 +11,7 @@
         <th>Title</th>
         <th>Description</th>
         <th>Date</th>
+        <th>Active</th>
       </tr>
     </thead>
     <tbody>
@@ -20,6 +21,7 @@
           <td><a class="nav-item nav-link" href="{{ url_for('admin.contest', contest_id=contest.id) }}">{{ contest.title }}</td>
           <td>{{ contest.description }}</td>
           <td>{{ contest.start_date_time.strftime('%Y-%m-%d') }}</td>
+          <td>{{ contest.active }}
         </tr>
       {% endfor %}
     </tbody>

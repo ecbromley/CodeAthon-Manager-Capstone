@@ -26,15 +26,30 @@ class Challenge(db.Model):
     )
 
 
-challenges = db.Table(
+contest_challenges = db.Table(
     "contest_challenges",
     db.Column("contest_id", db.Integer, db.ForeignKey("contest.id")),
     db.Column("challenge_id", db.Integer, db.ForeignKey("challenge.id")),
 )
 
 
+contest_participation = db.Table(
+    "contest_participation",
+    db.Column("contest_id", db.Integer, db.ForeignKey("contest.id")),
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+)
+
+
+team_members = db.Table(
+    "team_members",
+    db.Column("team_id", db.Integer, db.ForeignKey("team.id")),
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+)
+
+
 class Contest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    active = db.Column(db.Boolean, nullable=True, default=False)
     start_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     end_date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     title = db.Column(db.String(200), nullable=False)
@@ -42,7 +57,16 @@ class Contest(db.Model):
     submissions = db.relationship("Submission", backref="submission_contest", lazy=True)
     teams = db.relationship("Team", backref="contest_team", lazy=True)
     challenges = db.relationship(
-        "Challenge", secondary=challenges, backref="challenge_contest", lazy=True
+        "Challenge",
+        secondary=contest_challenges,
+        backref="contests",
+        lazy=True,
+    )
+    contest_participation = db.relationship(
+        "User",
+        secondary=contest_participation,
+        backref="user_participation",
+        lazy=True,
     )
 
 
@@ -78,7 +102,12 @@ class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     contest_id = db.Column(db.Integer, db.ForeignKey("contest.id"), nullable=False)
-    users = db.relationship("User", backref="user_team", lazy=True)
+    members = db.relationship(
+        "User",
+        secondary=team_members,
+        backref="team",
+        lazy=True,
+    )
 
 
 class User(db.Model, UserMixin):
@@ -90,7 +119,6 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
     role = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
-    team = db.Column(db.Integer, db.ForeignKey("team.id"), nullable=True)
     submissions = db.relationship("Submission", backref="submission_author", lazy=True)
     challenges = db.relationship("Challenge", backref="challenge_author", lazy=True)
 

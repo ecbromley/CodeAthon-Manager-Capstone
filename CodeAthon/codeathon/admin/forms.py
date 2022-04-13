@@ -9,6 +9,7 @@ from wtforms import (
     TextAreaField,
     IntegerField,
     SelectField,
+    BooleanField,
 )
 from wtforms.validators import (
     AnyOf,
@@ -53,6 +54,7 @@ class ContestForm(FlaskForm):
     end_date_time = DateTimeLocalField(
         "End Date and Time", format="%Y-%m-%dT%H:%M", validators=[DataRequired()]
     )
+    active = BooleanField("Active")
     submit = SubmitField("Add")
 
 
@@ -65,6 +67,7 @@ class ContestFormUpdate(FlaskForm):
     end_date_time = DateTimeLocalField(
         "End Date and Time", format="%Y-%m-%dT%H:%M", validators=[DataRequired()]
     )
+    active = BooleanField("Active")
     submit = SubmitField("Update")
 
 

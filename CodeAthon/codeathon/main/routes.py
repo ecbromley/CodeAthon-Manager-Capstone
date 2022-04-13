@@ -9,7 +9,7 @@ main = Blueprint("main", __name__)
 @main.route("/home")
 def home():
     # page = request.args.get("page", 1, type=int)
-    contest = Contest.query.order_by(Contest.start_date_time.desc()).first()
+    contest = Contest.query.filter_by(active=1).first()
     return render_template("home.html", contest=contest)
 
 

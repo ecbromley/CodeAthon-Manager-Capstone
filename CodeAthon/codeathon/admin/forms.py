@@ -1,6 +1,7 @@
 from flask import g
 from wsgiref.validate import validator
 from flask_wtf import FlaskForm
+from flask_ckeditor import CKEditorField
 from wtforms.fields import DateTimeLocalField
 from wtforms import (
     PasswordField,
@@ -29,7 +30,7 @@ from codeathon.models import User, Contest
 
 class ChallengeForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    description = TextAreaField("Description", validators=[DataRequired()])
+    description = CKEditorField("Description", validators=[DataRequired()])
     supportzip = FileField("Add Support File", validators=[FileAllowed(["zip"])])
     code_scorer = FileField("Add Scorer File")
     dockerfile = FileField("Add Docker File")
@@ -38,7 +39,7 @@ class ChallengeForm(FlaskForm):
 
 class ChallengeFormUpdate(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    description = TextAreaField("Description", validators=[DataRequired()])
+    description = CKEditorField("Description", validators=[DataRequired()])
     supportzip = FileField("Update Support File", validators=[FileAllowed(["zip"])])
     code_scorer = FileField("Update Scorer File")
     dockerfile = FileField("Update Docker File")
@@ -47,7 +48,7 @@ class ChallengeFormUpdate(FlaskForm):
 
 class ContestForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    description = TextAreaField("Description", validators=[DataRequired()])
+    description = CKEditorField("Description", validators=[DataRequired()])
     start_date_time = DateTimeLocalField(
         "Start Date and Time", format="%Y-%m-%dT%H:%M", validators=[DataRequired()]
     )
@@ -60,7 +61,7 @@ class ContestForm(FlaskForm):
 
 class ContestFormUpdate(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    description = TextAreaField("Description", validators=[DataRequired()])
+    description = CKEditorField("Description", validators=[DataRequired()])
     start_date_time = DateTimeLocalField(
         "Start Date and Time", format="%Y-%m-%dT%H:%M", validators=[DataRequired()]
     )

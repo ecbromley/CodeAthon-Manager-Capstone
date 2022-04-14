@@ -32,6 +32,8 @@
                 {% endif %}
             </div>
         </fieldset>
+        {% if team %}
+        <h5 class="article-title border-bottom mb-4">Current Members</h5>
         <table id="data" class="table table-striped">
           <thead>
             <tr>
@@ -51,62 +53,72 @@
                 <td>{{ member.last_name }}</td>
                 <td>{{ member.email }}</td>
                 <td>{{ member.user_role.name }}</td>
-                <td><button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#removeModal">Remove</button></td>
-                <div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Remove Member?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <form action="{{ url_for('admin.team_member_delete', team_id=team.id, user_id=member.id) }}" method="POST">
-                          <input class="btn btn-danger" type="submit" value="Remove">
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <td><a class="btn btn-danger btn-sm m-1" href="{{ url_for('admin.team_member_delete', team_id=team.id, user_id=member.id) }}">Remove</a></td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
-        <div class="mb-3">
-            {{ form.submit(class="btn btn-primary btn-sm") }}
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.teams_table') }}">Teams Table</a>
-        </div>
-        <table id="data" class="table table-striped">
+        {% endif %}
+        
+        {% if users %}
+        <h5 class="article-title border-bottom mb-4 mt-4">Available Registrants</h5>
+        <table id="data2" class="table table-striped">
             <thead>
               <tr>
-                <th>Add</th>
                 <th>User Name</th>
                 <th>First</th>
                 <th>Last</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {% for user in users %}
                 <tr>
-                  <td><a class="nav-item nav-link" href="{{ url_for('admin.team_member_add', team_id=team.id, user_id=user.id) }}">Add to Team</td>
                   <td>{{ user.username }}</a></td>
                   <td>{{ user.first_name }}</td>
                   <td>{{ user.last_name }}</td>
                   <td>{{ user.email }}</td>
                   <td>{{ user.user_role.name }}</td>
+                  <td><a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.team_member_add', team_id=team.id, user_id=user.id) }}"> Add </td>
                 </tr>
               {% endfor %}
             </tbody>
         </table>
+        {% endif %}
+        <div class="mb-3">
+          {{ form.submit(class="btn btn-primary btn-sm") }}
+          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.teams_table') }}">Teams Table</a>
+      </div>
     </form>
 </div>
 {% endblock content %}
 {% block scripts %}
   <script>
     $(document).ready(function () {
-      $('#data').DataTable();
+      $('#data').DataTable({
+        columns: [
+          null,
+          null,
+          null,
+          null,
+          {orderable: false, searchable: false},
+          {orderable: false, searchable: false}],
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      $('#data2').DataTable({
+        columns: [
+          null,
+          null,
+          null,
+          null,
+          {orderable: false, searchable: false},
+          {orderable: false, searchable: false}],
+      });
     });
   </script>
 {% endblock %}

@@ -21,12 +21,6 @@ from codeathon.models import Challenge
 challenges = Blueprint("challenges", __name__)
 
 
-@challenges.route("/challenges")
-def home():
-
-    return render_template("challenges.html")
-
-
 @challenges.route("/challenge/new", methods=["GET", "POST"])
 @login_required
 def new_challenge():

@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_ckeditor import CKEditor
 from codeathon.config import Config
 from sqlalchemy import MetaData
 
@@ -20,6 +21,7 @@ db = SQLAlchemy(
 )
 migrate = Migrate()
 bcrypt = Bcrypt()
+ckeditor = CKEditor()
 login_manager = LoginManager()
 login_manager.login_view = "users.login"
 login_manager.login_message_category = "info"
@@ -35,6 +37,7 @@ def create_app(config_class=Config):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    ckeditor.init_app(app)
 
     from codeathon.admin.routes import admin
     from codeathon.challenges.routes import challenges

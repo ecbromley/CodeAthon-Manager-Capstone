@@ -76,5 +76,7 @@
             <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.contests_table') }}">Cancel</a>
         </div>
     </form>
+    {{ ckeditor.load(pkg_type="standar") }}
+    {{ ckeditor.config(name='description') }}
 </div>
 {% endblock content %}

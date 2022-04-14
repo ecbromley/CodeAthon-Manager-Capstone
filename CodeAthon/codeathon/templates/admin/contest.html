@@ -3,20 +3,14 @@
   <article class="media content-section">
     <div class="media-body">
       <h2 class="article-title">{{ contest.title }}</h2>
-      {% if contest.active == 0 %}
+      {% if contest.active == False %}
       <h5 class="article-title"> - Inactive</h5>
       {% endif %}
-      <h6>From {{ contest.start_date_time }} to {{ contest.end_date_time }}</h6>
+      <h6 class="article-title border-bottom mb-3">From {{ contest.start_date_time }} to {{ contest.end_date_time }}</h6>
       <p class="article-content">{{ contest.description }}</p>
     </div>
-    <div class="article-metadata">
-      {% if current_user == current_user %}
-        <div>
-          <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.update_contest', contest_id=contest.id) }}">Update</a>
-          <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.contests_table') }}">Back</a>
-        </div>
-      {% endif %}
+    <div>
+    <h5 class="article-title border-bottom mb-4 mt-4">Registered for Contest</h5>
     </div>
     <table id="data" class="table table-striped">
       <thead>
@@ -58,6 +52,11 @@
         {% endfor %}
       </tbody>
     </table>
+    <div>
+      <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('admin.update_contest', contest_id=contest.id) }}">Update</a>
+      <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('admin.contests_table') }}">Back</a>
+    </div>
   </article>
   <!-- Modal -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

@@ -6,58 +6,47 @@
         <fieldset class="mb-3">
             <legend class="border-bottom mb-4">{{ legend }}</legend>
             <div class="mb-3">
-                {{ form.title.label(class="form-label") }}
-                {% if form.title.errors %}
-                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                {{ form.challenge.label(class="form-label") }}
+                {% if form.challenge.errors %}
+                    {{ form.challenge(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.title.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.title(class="form-control form-control-lg") }}
+                    {{ form.challenge(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
             <div class="mb-3">
-                {{ form.description.label(class="form-label") }}
-                {% if form.description.errors %}
-                    {{ form.description(class="form-control form-control-lg is-invalid") }}
+                {{ form.language.label(class="form-label") }}
+                {% if form.language.errors %}
+                    {{ form.language(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.description.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.description(class="form-control", rows='15') }}
+                    {{ form.language(class="form-control", rows='15') }}
                 {% endif %}
             </div>
             <div class="mb-3">
-                {{ form.supportzip.label(class="form-label") }}
-                <span class="text-muted">(must be in zip format)</span><br>
-                Current file: {{ challenge.supportzip_filename }}
-                {{ form.supportzip(class="form-control", type="file", id="formFile") }}
-                {% if form.supportzip.errors %}
-                    {% for error in form.supportzip.errors %}
+                {{ form.code.label(class="form-label") }}
+                Current file: {{ submission.code_filename }}
+                {{ form.code(class="form-control", type="file", id="formFile") }}
+                {% if form.code.errors %}
+                    {% for error in form.code.errors %}
                         <span class="text-danger">{{ error }}</span></br>
                     {% endfor %}
                 {% endif %}
             </div>
             <div class="mb-3">
-                {{ form.code_scorer.label(class="form-label") }}<br>
-                Current file: {{ challenge.code_scorer_filename }}
-                {{ form.code_scorer(class="form-control", type="file", id="formFile") }}
-                {% if form.code_scorer.errors %}
-                    {% for error in form.code_scorer.errors %}
-                        <span class="text-danger">{{ error }}</span></br>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <div class="mb-3">
-                {{ form.dockerfile.label(class="form-label") }}<br>
-                Current file: {{ challenge.dockerfile_filename }}
-                {{ form.dockerfile(class="form-control", type="file", id="formFile") }}
-                {% if form.dockerfile.errors %}
-                    {% for error in form.dockerfile.errors %}
+                {{ form.code_output.label(class="form-label") }}<br>
+                Current file: {{ submission.code_output_filename }}
+                {{ form.code_output(class="form-control", type="file", id="formFile") }}
+                {% if form.code_output.errors %}
+                    {% for error in form.code_output.errors %}
                         <span class="text-danger">{{ error }}</span></br>
                     {% endfor %}
                 {% endif %}

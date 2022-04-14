@@ -287,7 +287,12 @@ def update_team(team_id):
         abort(403)
     team = Team.query.get_or_404(team_id)
     contest = Contest.query.filter_by(id=team.contest_id).first()
-    users = contest.contest_participation
+    contestants = contest.contest_participation
+    users = []
+    for contestant in contestants:
+        if not contestant.team:
+            users.append(contestant)
+
     form = TeamFormUpdate()
     form.contest.choices = [
         (contest.id, contest.title)

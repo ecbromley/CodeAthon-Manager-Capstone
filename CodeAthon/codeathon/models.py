@@ -66,7 +66,7 @@ class Contest(db.Model):
         "User",
         secondary=contest_participation,
         backref="user_participation",
-        lazy=True,
+        lazy="dynamic",
     )
 
 
@@ -91,7 +91,7 @@ class Submission(db.Model):
     code_data = db.Column(db.LargeBinary, nullable=True)
     code_output_filename = db.Column(db.String(50), nullable=True)
     code_output_data = db.Column(db.LargeBinary, nullable=True)
-    score = db.Column(db.Integer, nullable=True)
+    score = db.Column(db.Integer, nullable=True, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     contest_id = db.Column(db.Integer, db.ForeignKey("contest.id"), nullable=False)
     challenge_id = db.Column(db.Integer, db.ForeignKey("challenge.id"), nullable=False)
@@ -106,7 +106,7 @@ class Team(db.Model):
         "User",
         secondary=team_members,
         backref="team",
-        lazy=True,
+        lazy="dynamic",
     )
 
 

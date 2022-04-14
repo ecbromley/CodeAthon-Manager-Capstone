@@ -58,6 +58,13 @@ class ContestForm(FlaskForm):
     active = BooleanField("Active")
     submit = SubmitField("Add")
 
+    def validate_active(self, active):
+        active = Contest.query.filter_by(active=True).first()
+        if active:
+            raise ValidationError(
+                "A contest is already active, only one contest may be active at one time."
+            )
+
 
 class ContestFormUpdate(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
@@ -70,6 +77,13 @@ class ContestFormUpdate(FlaskForm):
     )
     active = BooleanField("Active")
     submit = SubmitField("Update")
+
+    def validate_active(self, active):
+        active = Contest.query.filter_by(active=True).first()
+        if active:
+            raise ValidationError(
+                "A contest is already active, only one contest may be active at one time."
+            )
 
 
 class LanguageForm(FlaskForm):

@@ -60,7 +60,7 @@
             <div class="mb-3 form-check form-switch">
                 {{ form.active.label(class="form-check-label") }}
                 {% if form.active.errors %}
-                    {{ form.active(class="form-control form-control-lg is-invalid") }}
+                    {{ form.active(class="form-check-input is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.active.errors %}
                             <span>{{ error }}</span>

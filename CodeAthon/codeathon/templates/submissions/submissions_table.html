@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
+  <div class="media-body">
+    <h2 class="article-title article-metadata mb-3">{{ title }}</h2>
+  </div>
   <table id="data" class="table table-striped">
     <thead>
       <tr>
@@ -20,7 +23,7 @@
     </tbody>
   </table>
   <div>
-    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('challenges.new_challenge') }}">Add challenge</a>
+    <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('submissions.submission_new') }}">Add Submission</a>
   </div>
 {% endblock %}
 {% block scripts %}

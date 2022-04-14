@@ -32,7 +32,7 @@
                 {% endif %}
             </div>
             <div class="mb-3">
-                {{ form.code.label(class="form-label") }}
+                {{ form.code.label(class="form-label") }}<br>
                 Current file: {{ submission.code_filename }}
                 {{ form.code(class="form-control", type="file", id="formFile") }}
                 {% if form.code.errors %}

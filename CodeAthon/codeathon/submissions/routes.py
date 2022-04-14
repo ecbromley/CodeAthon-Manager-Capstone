@@ -15,7 +15,7 @@ from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 from codeathon import db
 from codeathon.submissions.forms import SubmissionForm
-from codeathon.models import Contest, Submission, User
+from codeathon.models import Challenge, Contest, Language, Submission, User
 
 
 submissions = Blueprint("submissions", __name__)
@@ -26,7 +26,7 @@ def submissions_table():
     submissions = Submission.query
     return render_template(
         "submissions/submissions_table.html",
-        title="submissions Table",
+        title="Submissions Table",
         submissions=submissions,
     )
 
@@ -35,12 +35,21 @@ def submissions_table():
 @login_required
 def submission_new():
     form = SubmissionForm()
+    form.challenge.choices = [
+        (challenge.id, challenge.title)
+        for challenge in Challenge.query.order_by(Challenge.title.asc()).all()
+    ]
+    form.language.choices = [
+        (language.id, language.name)
+        for language in Language.query.order_by(Language.name.asc()).all()
+    ]
+    contest = Contest.query.filter_by(active=True).first()
     submission = Submission()
     if form.validate_on_submit():
-        submission = submission(
+        submission = Submission(
             language_id=form.language.data,
             user_id=current_user.id,
-            contest_id=Contest.query.filter_by(active=True).first(),
+            contest_id=contest.id,
             challenge_id=form.challenge.data,
         )
         if form.code.data:
@@ -56,9 +65,9 @@ def submission_new():
         return redirect(url_for("submissions.submission", submission_id=submission.id))
     return render_template(
         "submissions/submission_add.html",
-        title="New submission",
+        title="New Submission",
         form=form,
-        legend="New submission",
+        legend="New Submission",
         submission=submission,
     )
 
@@ -66,15 +75,16 @@ def submission_new():
 @submissions.route("/submission/<int:submission_id>")
 @login_required
 def submission(submission_id):
-    submission = submission.query.get_or_404(submission_id)
+    submission = Submission.query.get_or_404(submission_id)
+    title = "Submission"
     return render_template(
-        "submissions/submission.html", title=submission.title, submission=submission
+        "submissions/submission.html", title=title, submission=submission
     )
 
 
 @submissions.route("/submission_download/<submission_id>/<filetype>")
 def download(submission_id, filetype):
-    submission = submission.query.get_or_404(submission_id)
+    submission = Submission.query.get_or_404(submission_id)
     if filetype == "code":
         return send_file(
             BytesIO(submission.code_data),
@@ -87,3 +97,8 @@ def download(submission_id, filetype):
             attachment_filename=submission.code_output_filename,
             as_attachment=True,
         )
+
+        # <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('submissions.update_submission', submission_id=submission.id) }}">Update</a>
+        # <div>
+    #    <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+    # </div>

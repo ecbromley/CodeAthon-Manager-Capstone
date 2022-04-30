@@ -83,3 +83,8 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+.submitted_code {
+  white-space: pre-line;
+  border-bottom: 8px solid #e3e3e3
+}

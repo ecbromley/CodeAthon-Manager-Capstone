@@ -87,6 +87,7 @@ class Role(db.Model):
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     time_submitted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    run_success = db.Column(db.Boolean, nullable=True, default=None)
     code_filename = db.Column(db.String(50), nullable=True)
     code_data = db.Column(db.LargeBinary, nullable=True)
     code_output_filename = db.Column(db.String(50), nullable=True)

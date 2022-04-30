@@ -3,16 +3,24 @@
   <article class="media content-section">
     <div class="media-body">
       <h2 class="article-title">{{ submission.time_submitted }}</h2>
-      <p class="article-content">{{ submission.user_id }}</p>
+      <h2 class="article-content">Submitted by {{ submission.submission_author.first_name }} {{ submission.submission_author.last_name }}</h2>
       <ul>
-        <li>Support Files: <a href="{{ url_for('submissions.download', submission_id=submission.id, filetype='code') }}">{{ submission.code_filename }}</a></li>
-        <li>Code Scoring File: <a href="{{ url_for('submissions.download', submission_id=submission.id, filetype='code_output') }}">{{ submission.code_output_filename }}</a></li>
+        {% if submission.code_filename %}
+        <li>Code File: <a href="{{ url_for('submissions.download', submission_id=submission.id, filetype='code') }}">{{ submission.code_filename }}</a></li>
+        {% endif %}
+        {% if submission.code_output_filename %}
+        <li>Code Output File: <a href="{{ url_for('submissions.download', submission_id=submission.id, filetype='code_output') }}">{{ submission.code_output_filename }}</a></li>
+        {% endif %}
       </ul>
     </div>
+
     <div class="article-metadata">
-      {% if current_user == current_user %}
-        
+      {% if submission.run_success == None %}
+        Your submission has not been compiled yet.
       {% endif %}
+    </div>
+    <div class="article-content">
+      <pre>{{ code }}</pre>
     </div>
   </article>
 {% endblock content %}

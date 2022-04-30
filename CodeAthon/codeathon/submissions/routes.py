@@ -1,4 +1,8 @@
-from io import BytesIO
+from base64 import encode
+from importlib.resources import open_binary
+from io import BytesIO, StringIO
+import os, tempfile, docker, subprocess, time
+import string
 from flask import (
     abort,
     Blueprint,
@@ -17,6 +21,8 @@ from codeathon import db
 from codeathon.submissions.forms import SubmissionForm
 from codeathon.models import Challenge, Contest, Language, Submission, User
 
+# from codeathon.submissions.utils import run_code, score_code
+
 
 submissions = Blueprint("submissions", __name__)
 
@@ -29,6 +35,24 @@ def submissions_table():
         title="Submissions Table",
         submissions=submissions,
     )
+
+
+@submissions.route("/command")
+def command():
+    os.system("mkdir commandfunction")
+    time.sleep(10)
+    os.system("rmdir commandfunction")
+    subs_to_run = True
+    while subs_to_run:
+        submitted = Submission.query.filter_by(run_success=None).first()
+        if submitted:
+            codefile = BytesIO(submitted.code_data)
+            subs_to_run = False
+
+    os.system("mkdir commandfunction")
+    time.sleep(10)
+    os.system("rmdir commandfunction")
+    return redirect("/")
 
 
 @submissions.route("/submission/new", methods=["GET", "POST"])
@@ -58,7 +82,6 @@ def submission_new():
         if form.code_output.data:
             submission.code_output_filename = form.code_output.data.filename
             submission.code_output_data = form.code_output.data.read()
-
         db.session.add(submission)
         db.session.commit()
         flash("Your solution has been submitted!", "success")
@@ -72,13 +95,40 @@ def submission_new():
     )
 
 
+@submissions.route("/submission_run/<int:submission_id>")
+@login_required
+def run_submissions(submission_id):
+    submission = Submission.query.get_or_404(submission_id)
+    title = "Submission Run"
+    runCode = BytesIO(submission.code_data)
+    code = runCode.read()
+    code = code.decode()
+
+    tmpCode = tempfile.NamedTemporaryFile()
+    tmpCode = BytesIO(submission.code_data)
+    subprocess.run("ls")
+    subprocess.run("cp tmpCode codeathon/static/main.c", shell=True)
+    code2 = tmpCode.read()
+    code2 = code2.decode()
+
+    return render_template(
+        "submissions/submission.html",
+        title=title,
+        submission=submission,
+        code=code,
+    )
+
+
 @submissions.route("/submission/<int:submission_id>")
 @login_required
 def submission(submission_id):
     submission = Submission.query.get_or_404(submission_id)
     title = "Submission"
+    runCode = BytesIO(submission.code_data)
+    code = runCode.read()
+    code = code.decode()
     return render_template(
-        "submissions/submission.html", title=title, submission=submission
+        "submissions/submission.html", title=title, submission=submission, code=code
     )
 
 
@@ -97,8 +147,3 @@ def download(submission_id, filetype):
             attachment_filename=submission.code_output_filename,
             as_attachment=True,
         )
-
-        # <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('submissions.update_submission', submission_id=submission.id) }}">Update</a>
-        # <div>
-    #    <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-    # </div>
